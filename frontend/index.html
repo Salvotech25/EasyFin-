@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFin Portafogli - Simulatore di Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <h1>EasyFin Portafogli</h1>
+            </div>
+            <nav class="nav" id="nav" style="display: none;">
+                <button class="nav-btn" onclick="mostraSezione('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="mostraSezione('trading')">
+                    <i class="fas fa-exchange-alt"></i> Trading
+                </button>
+                <button class="nav-btn" onclick="mostraSezione('portafoglio')">
+                    <i class="fas fa-briefcase"></i> Portafoglio
+                </button>
+                <button class="nav-btn" onclick="mostraSezione('strumenti')">
+                    <i class="fas fa-chart-line"></i> Strumenti
+                </button>
+                <button class="nav-btn" onclick="mostraSezione('storico')">
+                    <i class="fas fa-history"></i> Storico
+                </button>
+                <button class="nav-btn logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenuto principale -->
+    <main class="main">
+        <div class="container">
+            
+            <!-- Sezione Autenticazione -->
+            <div id="auth-section" class="section active">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h2>EasyFin Portafogli</h2>
+                            <p>Simulatore di Trading Finanziario</p>
+                        </div>
+                        
+                        <div class="auth-tabs">
+                            <button class="tab-btn active" onclick="mostraTab('login')">Login</button>
+                            <button class="tab-btn" onclick="mostraTab('register')">Registrazione</button>
+                        </div>
+                        
+                        <!-- Form Login -->
+                        <form id="login-form" class="auth-form active" onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-email">Email</label>
+                                <input type="email" id="login-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Accedi
+                            </button>
+                        </form>
+                        
+                        <!-- Form Registrazione -->
+                        <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label for="reg-nome">Nome</label>
+                                <input type="text" id="reg-nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-email">Email</label>
+                                <input type="email" id="reg-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-password">Password</label>
+                                <input type="password" id="reg-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Registrati
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sezione Dashboard -->
+            <div id="dashboard-section" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <p>Panoramica del tuo portafoglio</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Saldo Contante</h3>
+                            <div class="stat-value" id="saldo-contante">€ 0.00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Valore Strumenti</h3>
+                            <div class="stat-value" id="valore-strumenti">€ 0.00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>NAV Totale</h3>
+                            <div class="stat-value" id="nav-totale">€ 0.00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>P&L Non Realizzato</h3>
+                            <div class="stat-value" id="pnl-non-realizzato">€ 0.00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-credit-card"></i> Conto Corrente</h3>
+                    <div class="info-item">
+                        <span>IBAN:</span>
+                        <span id="iban" class="monospace">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Saldo Iniziale:</span>
+                        <span>€ 10.000,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sezione Trading -->
+            <div id="trading-section" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Trading</h2>
+                    <p>Esegui ordini di acquisto e vendita</p>
+                </div>
+                
+                <div class="trading-grid">
+                    <!-- Acquisto -->
+                    <div class="trading-card">
+                        <h3><i class="fas fa-arrow-up"></i> Acquisto</h3>
+                        <form id="acquisto-form" onsubmit="handleAcquisto(event)">
+                            <div class="form-group">
+                                <label for="acquisto-ticker">Strumento</label>
+                                <select id="acquisto-ticker" required>
+                                    <option value="">Seleziona strumento</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="acquisto-quantita">Quantità</label>
+                                <input type="number" id="acquisto-quantita" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Prezzo Corrente</label>
+                                <div class="prezzo-info" id="prezzo-acquisto">-</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Costo Totale</label>
+                                <div class="costo-info" id="costo-acquisto">-</div>
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-shopping-cart"></i> Acquista
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Vendita -->
+                    <div class="trading-card">
+                        <h3><i class="fas fa-arrow-down"></i> Vendita</h3>
+                        <form id="vendita-form" onsubmit="handleVendita(event)">
+                            <div class="form-group">
+                                <label for="vendita-ticker">Posizione</label>
+                                <select id="vendita-ticker" required>
+                                    <option value="">Seleziona posizione</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="vendita-quantita">Quantità</label>
+                                <input type="number" id="vendita-quantita" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantità Disponibile</label>
+                                <div class="quantita-info" id="quantita-disponibile">-</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Incasso Totale</label>
+                                <div class="incasso-info" id="incasso-vendita">-</div>
+                            </div>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-money-bill-wave"></i> Vendi
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sezione Portafoglio -->
+            <div id="portafoglio-section" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-briefcase"></i> Portafoglio</h2>
+                    <p>Le tue posizioni attuali</p>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Strumento</th>
+                                <th>Quantità</th>
+                                <th>Prezzo Medio</th>
+                                <th>Prezzo Corrente</th>
+                                <th>Valore</th>
+                                <th>P&L Non Realizzato</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portafoglio-tbody">
+                            <tr>
+                                <td colspan="6" class="text-center">Nessuna posizione</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sezione Strumenti -->
+            <div id="strumenti-section" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Strumenti Finanziari</h2>
+                    <button class="btn btn-primary" onclick="aggiornaPrezzi()">
+                        <i class="fas fa-sync-alt"></i> Aggiorna Prezzi
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Nome</th>
+                                <th>Prezzo Corrente</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="strumenti-tbody">
+                            <tr>
+                                <td colspan="4" class="text-center">Caricamento...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sezione Storico -->
+            <div id="storico-section" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Storico Ordini</h2>
+                    <p>Cronologia delle tue operazioni</p>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Strumento</th>
+                                <th>Quantità</th>
+                                <th>Prezzo</th>
+                                <th>P&L Realizzato</th>
+                            </tr>
+                        </thead>
+                        <tbody id="storico-tbody">
+                            <tr>
+                                <td colspan="6" class="text-center">Nessun ordine</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 EasyFin Portafogli - Simulatore di Trading</p>
+            <p>
+                <a href="http://localhost:8082/swagger-ui/index.html" target="_blank">
+                    <i class="fas fa-book"></i> API Documentation
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Notifiche -->
+    <div id="notifications" class="notifications"></div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Caricamento...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
