@@ -36,10 +36,21 @@ public class ServizioAutenticazione {
         if (email == null || email.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email richiesta");
         }
+
+        // Validazione formato email
+        if (!isValidEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato email non valido");
+        }
+
         if (password == null || password.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password richiesta");
         }
-        
+
+        // Validazione lunghezza password
+        if (password.length() < 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password deve essere di almeno 6 caratteri");
+        }
+
         // Verifica se l'email esiste già
         if (utenteRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email già registrata");
@@ -103,18 +114,26 @@ public class ServizioAutenticazione {
     private String generaIbanMock() {
         Random random = new Random();
         StringBuilder iban = new StringBuilder("IT");
-        
+
         // Aggiungi 2 cifre di controllo
         iban.append(String.format("%02d", random.nextInt(100)));
-        
+
         // Aggiungi lettera per identificativo banca
         iban.append((char) ('A' + random.nextInt(26)));
-        
+
         // Aggiungi 22 cifre per conto corrente
         for (int i = 0; i < 22; i++) {
             iban.append(random.nextInt(10));
         }
-        
+
         return iban.toString();
+    }
+
+    /**
+     * Valida il formato dell'email con regex
+     */
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email != null && email.matches(emailRegex);
     }
 }
