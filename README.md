@@ -2,7 +2,7 @@
 
 ## Cos'è EasyFin?
 
-EasyFin è un'applicazione web che simula un ambiente di trading finanziario. Ho sviluppato questo progetto per la mia tesi universitaria per dimostrare le competenze acquisite in programmazione web.
+EasyFin è un'applicazione web che simula un ambiente di trading finanziario. Ho sviluppato questo progetto per la mia tesi universitaria per dimostrare le competenze acquisite nel corso di studi.
 
 **Funzionalità principali:**
 
@@ -64,17 +64,71 @@ npm start
 
 ```
 easyFin/
-├── backend/          # Parte Java (Spring Boot)
-│   ├── controller/   # Gestisce le richieste API
-│   ├── servizio/     # Logica di business
-│   ├── dominio/      # Modelli dei dati
-│   └── repository/   # Accesso al database
-├── frontend/         # Parte web (HTML/CSS/JS)
-│   ├── index.html    # Pagina principale
-│   ├── app.js        # Logica JavaScript
-│   └── styles.css    # Stili CSS
-└── server/           # Server Node.js
-    └── server.js     # Configurazione server
+├── backend/                       # Applicazione Spring Boot
+│   ├── src/main/java/it/easyfin/app/
+│   │   ├── Application.java       # Main class Spring Boot
+│   │   ├── controller/            # Controller Layer - REST API
+│   │   │   ├── AutenticazioneController.java
+│   │   │   ├── PortafoglioController.java
+│   │   │   ├── ContoController.java
+│   │   │   ├── StrumentiController.java
+│   │   │   ├── QuotazioniController.java
+│   │   │   └── ErrorController.java
+│   │   ├── servizio/              # Service Layer - Business Logic
+│   │   │   ├── ServizioAutenticazione.java
+│   │   │   ├── ServizioPortafoglio.java
+│   │   │   ├── ServizioQuotazioni.java
+│   │   │   └── ServizioToken.java
+│   │   ├── repository/            # Repository Layer - Data Access JPA
+│   │   │   ├── UtenteRepository.java
+│   │   │   ├── ContoRepository.java
+│   │   │   ├── PosizioneRepository.java
+│   │   │   ├── OrdineRepository.java
+│   │   │   ├── StrumentoRepository.java
+│   │   │   └── MovimentoCassaRepository.java
+│   │   ├── dominio/               # Domain Model - Entities
+│   │   │   ├── Utente.java
+│   │   │   ├── Conto.java
+│   │   │   ├── Posizione.java
+│   │   │   ├── Ordine.java
+│   │   │   ├── Strumento.java
+│   │   │   ├── MovimentoCassa.java
+│   │   │   ├── TipoOrdine.java
+│   │   │   └── StatoOrdine.java
+│   │   ├── dto/                   # Data Transfer Objects
+│   │   │   ├── LoginRichiesta.java
+│   │   │   ├── LoginRisposta.java
+│   │   │   ├── RegistrazioneRichiesta.java
+│   │   │   ├── PortafoglioRisposta.java
+│   │   │   ├── PosizioneDto.java
+│   │   │   ├── OrdineDto.java
+│   │   │   ├── StrumentoDto.java
+│   │   │   ├── TotaliDto.java
+│   │   │   ├── ContoRisposta.java
+│   │   │   ├── MovimentoCassaDto.java
+│   │   │   ├── AcquistoRichiesta.java
+│   │   │   └── VenditaRichiesta.java
+│   │   ├── config/                # Configurazioni
+│   │   │   └── SwaggerConfig.java
+│   │   ├── archivio/              # Componenti di supporto
+│   │   │   └── ArchivioMemoria.java
+│   │   └── inizializzazione/      # Inizializzazione dati
+│   │       └── DataLoader.java
+│   ├── src/main/resources/
+│   │   └── application.properties # Configurazione applicazione
+│   └── pom.xml                    # Dipendenze Maven
+│
+├── frontend/                      # Frontend - Single Page Application
+│   ├── index.html                 # Struttura HTML
+│   ├── app.js                     # Logica JavaScript
+│   └── styles.css                 # Stili CSS
+│
+├── server/                        # Server Node.js di sviluppo
+│   ├── server.js                  # Configurazione server Express
+│   ├── package.json               # Dipendenze Node.js
+│   └── package-lock.json          # Lock file dipendenze
+│
+└── README.md                      # Documentazione progetto
 ```
 
 ## Funzionalità Implementate
